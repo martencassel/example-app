@@ -1,0 +1,4 @@
+serviceName: "migrations"
+defaultPage: "Welcome to NGINX for migrations"
+labels:
+  app: "migrations-nginx"

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.serviceName }}-default-page
+data:
+  index.html: |-
+    <html>
+      <head><title>{{ .Values.serviceName }}</title></head>
+      <body>
+        <h1>{{ .Values.defaultPage }}</h1>
+      </body>
+    </html>

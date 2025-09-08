@@ -1,0 +1,4 @@
+serviceName: "default-service"
+defaultPage: "Welcome to NGINX for default-service"
+labels:
+  app: "nginx"

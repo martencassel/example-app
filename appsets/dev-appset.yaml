@@ -1,0 +1,63 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-appset
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          # Wave 0: Shared Data
+          - name: shared-data
+            namespace: shared-data-dev
+            path: apps/shared-data/app.yaml
+            wave: 0
+          # Wave 1: Migrations
+          - name: migrations
+            namespace: migrations-dev
+            path: apps/migrations/app.yaml
+            wave: 1
+          # Wave 2–3: Low-risk
+          - name: user
+            namespace: user-dev
+            path: apps/user/app.yaml
+            wave: 2
+          - name: catalog
+            namespace: catalog-dev
+            path: apps/catalog/app.yaml
+            wave: 2
+          # Wave 4: Critical
+          - name: checkout
+            namespace: checkout-dev
+            path: apps/checkout/app.yaml
+            wave: 4
+          - name: payments
+            namespace: payments-dev
+            path: apps/payments/app.yaml
+            wave: 4
+          # Wave 5: Exposure
+          - name: exposure
+            namespace: exposure-dev
+            path: apps/exposure/app.yaml
+            wave: 5
+  template:
+    metadata:
+      name: '{{name}}-dev'
+      namespace: argocd
+      labels:
+        wave: '{{wave}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'https://your-git-repo-url'
+        targetRevision: main
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
